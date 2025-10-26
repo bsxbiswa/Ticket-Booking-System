@@ -1,5 +1,6 @@
 package com.example.bsxbiswa.inventoryservice.service;
 
+import com.example.bsxbiswa.inventoryservice.entity.Event;
 import com.example.bsxbiswa.inventoryservice.repository.EventRepository;
 import com.example.bsxbiswa.inventoryservice.repository.VenueRepository;
 import com.example.bsxbiswa.inventoryservice.response.EventInventoryResponse;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InventoryService {
@@ -21,6 +23,12 @@ public class InventoryService {
     }
 
     public List<EventInventoryResponse> getAllEvents () {
+        final List<Event> events = eventRepository.findAll();
 
+        return events.stream().map(event -> EventInventoryResponse.builder()
+                .event(event.getName())
+                .capacity(event.getLeftCapacity())
+                .venue(event.getVenue())
+                .build()).collect(Collectors.toList());
     }
 }
